@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using TaskManagmentSystem.API.Data;
 using TaskManagmentSystem.API.DTOs;
 using TaskManagmentSystem.API.Entities;
@@ -28,6 +29,8 @@ namespace TaskManagmentSystem.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequestDto registerRequest)
         {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -70,7 +73,8 @@ namespace TaskManagmentSystem.API.Controllers
                 return Unauthorized("Invalid credentials");
             }
             var token = _jwtTokenService.CreateToken(user);
-            return Ok(token);
+            return Ok(new { token });
+
         }
         #endregion
     }

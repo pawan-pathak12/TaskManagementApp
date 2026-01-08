@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using TaskManagmentSystem.API.DTOs.Tasks;
 using TaskManagmentSystem.API.Interfaces.Repositories;
 
@@ -9,12 +10,12 @@ namespace TaskManagmentSystem.API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskController : ControllerBase
+    public class TasksController : ControllerBase
     {
         private readonly ITaskRepository _taskRepository;
         private readonly IMapper _mapper;
 
-        public TaskController(ITaskRepository taskRepository, IMapper mapper)
+        public TasksController(ITaskRepository taskRepository, IMapper mapper)
         {
             _taskRepository = taskRepository;
             this._mapper = mapper;
@@ -33,11 +34,8 @@ namespace TaskManagmentSystem.API.Controllers
             var task = _mapper.Map<Entities.Task>(taskDto);
 
             #region Business logic 
-            var userExists = await _taskRepository.UserExists(task.UserId);
-            if (!userExists)
-            {
-                return BadRequest($"User not found with id {task.UserId}");
-            }
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            task.UserId = userId;
 
             #endregion
             await _taskRepository.AddAsync(task);
@@ -99,7 +97,7 @@ namespace TaskManagmentSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var existingTask = _taskRepository.GetById(id);
+            var existingTask = await _taskRepository.GetById(id);
             if (existingTask == null)
                 return NotFound();
 

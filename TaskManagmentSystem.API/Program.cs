@@ -42,6 +42,26 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+#region For Frontend
+
+// ADD THIS BLOCK FOR CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:5500",   // VS Code Live Server default
+                "http://127.0.0.1:5500",
+                "http://localhost:3000",   // if you ever use another port
+                "https://localhost:7250"   // optional, if frontend ever on same
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // if you use cookies later
+    });
+});
+#endregion
+
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -84,6 +104,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.UseCors("AllowLocalhost");
 
 app.UseHttpsRedirection();
 
