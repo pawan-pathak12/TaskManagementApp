@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskManagmentSystem.API.Data;
+using TaskManagmentSystem.API.Interfaces.Service;
+using TaskManagmentSystem.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +18,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 #region Services Registers 
-
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 #endregion
 
 #region Jwt Setup
 
 var jwtSettigns = builder.Configuration.GetSection("Jwt");
+
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
