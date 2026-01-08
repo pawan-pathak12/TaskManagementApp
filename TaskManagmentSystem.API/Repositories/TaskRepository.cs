@@ -1,0 +1,73 @@
+﻿using Microsoft.EntityFrameworkCore;
+using TaskManagmentSystem.API.Data;
+using TaskManagmentSystem.API.Interfaces.Repositories;
+
+namespace TaskManagmentSystem.API.Repositories
+{
+    public class TaskRepository : ITaskRepository
+    {
+        private readonly ApplicationDbContext _context;
+
+        public TaskRepository(ApplicationDbContext context)
+        {
+            this._context = context;
+        }
+        public async Task<int> AddAsync(Entities.Task task)
+        {
+            await _context.Tasks.AddAsync(task);
+            await _context.SaveChangesAsync();
+            return task.Id;
+        }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true);
+            if (user == null)
+            {
+                return false;
+            }
+            _context.Tasks.Remove(user);
+            await _context.SaveChangesAsync();
+            return true;
+
+        }
+
+        public async Task<IEnumerable<Entities.Task>> GetAllAsync()
+        {
+            var tasks = await _context.Tasks.ToListAsync();
+            return tasks;
+        }
+
+        public async Task<Entities.Task?> GetById(int id)
+        {
+            var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true);
+            if (user == null)
+            {
+                return null;
+            }
+            return user;
+        }
+
+        public async Task<bool> UpdateAsync(int id, Entities.Task task)
+        {
+            if (id != task.Id)
+            {
+                return false;
+            }
+            var existingTask = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
+            if (existingTask == null)
+            {
+                return false;
+            }
+
+            existingTask.IsActive = task.IsActive;
+            existingTask.Description = task.Description;
+            existingTask.Title = task.Title;
+            task.UpdatedAt = DateTimeOffset.UtcNow;
+            existingTask.Status = task.Status;
+
+            await _context.SaveChangesAsync();
+            return true;
+        }
+    }
+}

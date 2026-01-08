@@ -12,5 +12,6 @@ namespace TaskManagmentSystem.API.Data
         {
         }
         public DbSet<User> Users => Set<User>();
+        public DbSet<Entities.Task> Tasks => Set<Entities.Task>();
     }
 }
