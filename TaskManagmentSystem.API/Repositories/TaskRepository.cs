@@ -12,6 +12,9 @@ namespace TaskManagmentSystem.API.Repositories
         {
             this._context = context;
         }
+
+        #region CURD Operatons 
+
         public async Task<int> AddAsync(Entities.Task task)
         {
             await _context.Tasks.AddAsync(task);
@@ -26,7 +29,7 @@ namespace TaskManagmentSystem.API.Repositories
             {
                 return false;
             }
-            _context.Tasks.Remove(user);
+            user.IsActive = false;
             await _context.SaveChangesAsync();
             return true;
 
@@ -69,5 +72,16 @@ namespace TaskManagmentSystem.API.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+
+        #endregion
+
+        #region User 
+
+        public async Task<bool> UserExists(int id)
+        {
+            return await _context.Users.AnyAsync(x => x.Id == id);
+
+        }
+        #endregion
     }
 }

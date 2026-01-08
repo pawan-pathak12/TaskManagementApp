@@ -4,7 +4,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using TaskManagmentSystem.API.Data;
+using TaskManagmentSystem.API.Interfaces.Repositories;
 using TaskManagmentSystem.API.Interfaces.Service;
+using TaskManagmentSystem.API.Repositories;
 using TaskManagmentSystem.API.Services;
 
 
@@ -44,8 +46,11 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 #region Services Registers 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 #endregion
 
 #region Jwt Setup
@@ -88,3 +93,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+public partial class Program { }

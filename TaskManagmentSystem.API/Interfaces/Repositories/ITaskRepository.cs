@@ -11,5 +11,10 @@ namespace TaskManagmentSystem.API.Interfaces.Repositories
         Task<bool> UpdateAsync(int id, Task task);
         Task<bool> DeleteAsync(int id);
 
+
+        #region User 
+
+        Task<bool> UserExists(int id);
+        #endregion
     }
 }
