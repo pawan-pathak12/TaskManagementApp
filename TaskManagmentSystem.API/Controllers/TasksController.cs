@@ -50,7 +50,8 @@ namespace TaskManagmentSystem.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var tasks = await _taskRepository.GetAllAsync();
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var tasks = await _taskRepository.GetAllAsync(userId);
             var responseTask = _mapper.Map<IEnumerable<ResponseTaskDto>>(tasks);
 
             return Ok(responseTask);
@@ -60,7 +61,9 @@ namespace TaskManagmentSystem.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var task = await _taskRepository.GetById(id);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var task = await _taskRepository.GetById(id, userId);
             if (task == null)
                 return NotFound();
             var resposneTask = _mapper.Map<ResponseTaskDto>(task);
@@ -79,10 +82,6 @@ namespace TaskManagmentSystem.API.Controllers
             }
             var task = _mapper.Map<Entities.Task>(taskDto);
 
-            var existingTask = _taskRepository.GetById(id);
-            if (existingTask == null)
-                return NotFound();
-
             var isUpdated = await _taskRepository.UpdateAsync(id, task);
             if (!isUpdated)
             {
@@ -97,7 +96,9 @@ namespace TaskManagmentSystem.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            var existingTask = await _taskRepository.GetById(id);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            var existingTask = await _taskRepository.GetById(id, userId);
             if (existingTask == null)
                 return NotFound();
 

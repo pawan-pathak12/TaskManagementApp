@@ -34,16 +34,17 @@ namespace TaskManagmentSystem.API.Repositories
             return true;
 
         }
-
-        public async Task<IEnumerable<Entities.Task>> GetAllAsync()
+        public async Task<IEnumerable<Entities.Task>> GetAllAsync(int userId)
         {
-            var tasks = await _context.Tasks.ToListAsync();
-            return tasks;
+            return await _context.Tasks
+                                 .Where(x => x.UserId == userId)
+                                 .ToListAsync();
         }
 
-        public async Task<Entities.Task?> GetById(int id)
+
+        public async Task<Entities.Task?> GetById(int id, int userId)
         {
-            var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true);
+            var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true && x.UserId == userId);
             if (user == null)
             {
                 return null;
@@ -53,10 +54,7 @@ namespace TaskManagmentSystem.API.Repositories
 
         public async Task<bool> UpdateAsync(int id, Entities.Task task)
         {
-            if (id != task.Id)
-            {
-                return false;
-            }
+
             var existingTask = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
             if (existingTask == null)
             {
