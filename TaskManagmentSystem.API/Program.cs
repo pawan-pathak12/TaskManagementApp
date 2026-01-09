@@ -98,12 +98,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+using var serviceScope = app.Services.CreateScope();
+using var dbcontext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+dbcontext?.Database.Migrate();
+
 app.UseCors("AllowLocalhost");
 
 app.UseHttpsRedirection();
