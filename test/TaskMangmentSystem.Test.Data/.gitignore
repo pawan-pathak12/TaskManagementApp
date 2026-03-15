@@ -1,0 +1,13 @@
+bin/
+obj/
+*.dll
+*.pdb
+*.cache
+*.log
+*.user
+.vs/
+appsettings.json
+obj
+.idea
+appsettings.Development.json
+taskmanagmentapi.runasp.net-WebDeploy.publishSettings

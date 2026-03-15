@@ -2,4 +2,9 @@
   <Folder Name="/src/">
     <Project Path="TaskManagmentSystem.API/TaskManagmentSystem.API.csproj" />
   </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/TaskMangmentSystem.Test.API/TaskMangmentSystem.Test.API.csproj" Id="55933b28-01cc-4f94-8ac4-95b869aa7fbb" />
+    <Project Path="test/TaskMangmentSystem.Test.Data/TaskMangmentSystem.Test.Data.csproj" Id="322b5c8e-a9d0-4a5d-a297-3b59f4361b16" />
+    <Project Path="test/TaskMangmentSystem.Test.Unit/TaskMangmentSystem.Test.Unit.csproj" Id="500b4331-ff1d-4893-9697-f8e2fb6b0da7" />
+  </Folder>
 </Solution>
