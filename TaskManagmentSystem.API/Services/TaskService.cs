@@ -33,7 +33,6 @@ namespace TaskManagmentSystem.API.Services
             return await _taskRepository.AddAsync(task);
         }
 
-
         public async Task<bool> DeleteAsync(int id)
         {
             if (id <= 0)
@@ -60,8 +59,6 @@ namespace TaskManagmentSystem.API.Services
 
             return await _taskRepository.GetById(id, userId);
         }
-
-
 
         public async Task<bool> UpdateAsync(int id, Entities.Task task)
         {

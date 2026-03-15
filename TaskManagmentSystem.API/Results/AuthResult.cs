@@ -18,6 +18,15 @@
             };
         }
 
+        public static AuthResult Success(string message, string accesstoken)
+        {
+            return new AuthResult
+            {
+                IsSuccess = true,
+                Message = message,
+                AccessToken = accesstoken
+            };
+        }
         public static AuthResult Failure(string error)
         {
             return new AuthResult
