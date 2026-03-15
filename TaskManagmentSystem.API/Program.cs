@@ -6,7 +6,7 @@ using System.Text;
 using TaskManagmentSystem.API.Data;
 using TaskManagmentSystem.API.Interfaces.Repositories;
 using TaskManagmentSystem.API.Interfaces.Service;
-using TaskManagmentSystem.API.Repositories;
+using TaskManagmentSystem.API.Repositories.EFCore;
 using TaskManagmentSystem.API.Services;
 
 

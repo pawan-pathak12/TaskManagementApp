@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskManagmentSystem.API.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using TaskManagmentSystem.API.DTOs;
 using TaskManagmentSystem.API.Entities;
 using TaskManagmentSystem.API.Interfaces.Service;
@@ -12,15 +9,12 @@ namespace TaskManagmentSystem.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IJwtTokenService _jwtTokenService;
-        private readonly ApplicationDbContext _context;
-        private readonly PasswordHasher<User> _passwordHasher;
 
-        public AuthController(IJwtTokenService jwtTokenService, ApplicationDbContext context)
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
         {
-            this._jwtTokenService = jwtTokenService;
-            this._context = context;
-            _passwordHasher = new PasswordHasher<User>();
+            this._authService = authService;
         }
 
 
@@ -28,26 +22,16 @@ namespace TaskManagmentSystem.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] RegisterRequestDto registerRequest)
         {
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var userExists = await _context.Users.AnyAsync(x => x.Email == registerRequest.Email);
-            if (userExists)
-            {
-                return BadRequest("User already exists");
-
-            }
             var user = new User
             {
-                Email = registerRequest.Email
+                Email = registerRequest.Email,
+                PasswordHash = registerRequest.Password
             };
-
-            user.PasswordHash = _passwordHasher.HashPassword(user, registerRequest.Password);
-
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            var result = await _authService.RegisterAsync(user);
+            if (!result.IsSuccess)
+            {
+                return BadRequest($"{result.Error}");
+            }
 
             return Ok("User Registered successfully");
         }
@@ -58,21 +42,20 @@ namespace TaskManagmentSystem.API.Controllers
 
         public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto loginRequest)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == loginRequest.Email);
-            if (user == null)
+            var user = new User
             {
-                return Unauthorized("Invalid credentials");
+                Email = loginRequest.Email,
+                PasswordHash = loginRequest.Password
+            };
+
+            var result = await _authService.LoginAsync(user);
+            if (!result.IsSuccess)
+            {
+
+                return BadRequest(result.Error);
             }
 
-            //hash the enter password and compare with database 
-            var result = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, loginRequest.Password);
-            if (result == PasswordVerificationResult.Failed)
-            {
-                return Unauthorized("Invalid credentials");
-            }
-            var token = _jwtTokenService.CreateToken(user);
-            return Ok(new { token });
-
+            return Ok(new { accesstoken = result.AccessToken });
         }
         #endregion
     }

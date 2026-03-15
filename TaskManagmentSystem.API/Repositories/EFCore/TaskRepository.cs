@@ -2,7 +2,7 @@
 using TaskManagmentSystem.API.Data;
 using TaskManagmentSystem.API.Interfaces.Repositories;
 
-namespace TaskManagmentSystem.API.Repositories
+namespace TaskManagmentSystem.API.Repositories.EFCore
 {
     public class TaskRepository : ITaskRepository
     {
