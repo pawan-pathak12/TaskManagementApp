@@ -24,7 +24,7 @@ namespace TaskManagmentSystem.API.Services
             var userExists = await _userRepository.UserExistsAsync(user.Email);
             if (userExists)
             {
-                return AuthResult.Failure("user already exists");
+                return AuthResult.Failure(error: "user already exists");
             }
             var newUser = new User
             {
@@ -35,7 +35,7 @@ namespace TaskManagmentSystem.API.Services
             newUser.PasswordHash = _passwordHasher.HashPassword(newUser, user.PasswordHash);
             await _userRepository.AddAsync(newUser);
 
-            return AuthResult.Success("User Added successfully");
+            return AuthResult.Success(message: "User Added Successfully");
         }
 
         public async Task<AuthResult> LoginAsync(User user)
@@ -44,7 +44,7 @@ namespace TaskManagmentSystem.API.Services
 
             if (user != null)
             {
-                return AuthResult.Failure("Invalid credentials");
+                return AuthResult.Failure(error: "Invalid credentials");
             }
             var result = _passwordHasher.VerifyHashedPassword(storedUser, storedUser.PasswordHash, user.PasswordHash);
             if (result == PasswordVerificationResult.Failed)

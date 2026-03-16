@@ -5,7 +5,7 @@ namespace TaskManagmentSystem.API.Interfaces.Service
     {
         Task<int> CreateAsync(TodoItem task);
         Task<IEnumerable<TodoItem>> GetAllAsync(int userId);
-        Task<TodoItem?> GetById(int id, int userId);
+        Task<TodoItem?> GetByIdAsync(int id, int userId);
         Task<bool> UpdateAsync(int id, TodoItem task);
         Task<bool> DeleteAsync(int id);
 

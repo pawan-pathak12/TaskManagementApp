@@ -56,7 +56,7 @@ namespace TaskManagmentSystem.API.Services
             return await _taskRepository.GetAllAsync(userId);
         }
 
-        public async Task<TodoItem?> GetById(int id, int userId)
+        public async Task<TodoItem?> GetByIdAsync(int id, int userId)
         {
             // Task ID must be positive
             if (id <= 0)

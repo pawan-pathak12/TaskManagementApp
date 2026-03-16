@@ -11,7 +11,6 @@ using TaskManagmentSystem.API.Repositories.EFCore;
 using TaskManagmentSystem.API.Services;
 
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -45,7 +44,6 @@ builder.Services.AddSwaggerGen(c =>
 
 #region For Frontend
 
-// ADD THIS BLOCK FOR CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", policy =>
@@ -64,8 +62,9 @@ builder.Services.AddCors(options =>
 #endregion
 
 
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("LocalServer")));
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
@@ -77,6 +76,7 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+#endregion
 
 #region Jwt Setup
 
