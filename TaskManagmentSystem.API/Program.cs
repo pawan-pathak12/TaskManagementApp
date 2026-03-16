@@ -6,6 +6,7 @@ using System.Text;
 using TaskManagmentSystem.API.Data;
 using TaskManagmentSystem.API.Interfaces.Repositories;
 using TaskManagmentSystem.API.Interfaces.Service;
+using TaskManagmentSystem.API.Repositories;
 using TaskManagmentSystem.API.Repositories.EFCore;
 using TaskManagmentSystem.API.Services;
 
@@ -71,7 +72,11 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 #region Services Registers 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-#endregion
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 
 #region Jwt Setup
 
@@ -101,9 +106,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-using var serviceScope = app.Services.CreateScope();
-using var dbcontext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-dbcontext?.Database.Migrate();
+//using var serviceScope = app.Services.CreateScope();
+//using var dbcontext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+//dbcontext?.Database.Migrate();
 
 app.UseCors("AllowLocalhost");
 

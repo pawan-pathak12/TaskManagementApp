@@ -1,12 +1,12 @@
-﻿using Task = TaskManagmentSystem.API.Entities.Task;
+﻿using TodoItem = TaskManagmentSystem.API.Entities.TodoItem;
 namespace TaskManagmentSystem.API.Interfaces.Service
 {
     public interface ITaskService
     {
-        Task<int> CreateAsync(Task task);
-        Task<IEnumerable<Task>> GetAllAsync(int userId);
-        Task<Task?> GetById(int id, int userId);
-        Task<bool> UpdateAsync(int id, Task task);
+        Task<int> CreateAsync(TodoItem task);
+        Task<IEnumerable<TodoItem>> GetAllAsync(int userId);
+        Task<TodoItem?> GetById(int id, int userId);
+        Task<bool> UpdateAsync(int id, TodoItem task);
         Task<bool> DeleteAsync(int id);
 
         #region User 

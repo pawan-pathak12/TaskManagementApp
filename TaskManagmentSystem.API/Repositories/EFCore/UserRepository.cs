@@ -49,8 +49,6 @@ namespace TaskManagmentSystem.API.Repositories
             // Soft delete example (preferred in most systems)
             user.IsActive = false;
 
-            // Or hard delete:
-            // _context.Users.Remove(user);
 
             await _context.SaveChangesAsync();
             return true;

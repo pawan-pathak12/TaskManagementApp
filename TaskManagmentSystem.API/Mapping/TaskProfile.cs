@@ -8,9 +8,9 @@ namespace TaskManagmentSystem.API.Mapping
     {
         public TaskProfile()
         {
-            CreateMap<Entities.Task, CreateTaskDto>().ReverseMap();
-            CreateMap<Entities.Task, UpdateTaskDto>().ReverseMap();
-            CreateMap<Entities.Task, ResponseTaskDto>().ReverseMap();
+            CreateMap<Entities.TodoItem, CreateTaskDto>().ReverseMap();
+            CreateMap<Entities.TodoItem, UpdateTaskDto>().ReverseMap();
+            CreateMap<Entities.TodoItem, ResponseTaskDto>().ReverseMap();
         }
 
     }

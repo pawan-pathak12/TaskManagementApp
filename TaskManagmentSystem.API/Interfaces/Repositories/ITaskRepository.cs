@@ -1,14 +1,14 @@
 ﻿
-using Task = TaskManagmentSystem.API.Entities.Task;
+using TodoItem = TaskManagmentSystem.API.Entities.TodoItem;
 
 namespace TaskManagmentSystem.API.Interfaces.Repositories
 {
     public interface ITaskRepository
     {
-        Task<int> AddAsync(Task task);
-        Task<IEnumerable<Task>> GetAllAsync(int userId);
-        Task<Task?> GetById(int id, int userId);
-        Task<bool> UpdateAsync(int id, Task task);
+        Task<int> AddAsync(TodoItem task);
+        Task<IEnumerable<TodoItem>> GetAllAsync(int userId);
+        Task<TodoItem?> GetById(int id, int userId);
+        Task<bool> UpdateAsync(int id, TodoItem task);
         Task<bool> DeleteAsync(int id);
 
 

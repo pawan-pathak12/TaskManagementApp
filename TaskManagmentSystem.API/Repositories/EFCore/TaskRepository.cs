@@ -15,7 +15,7 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
 
         #region CURD Operatons 
 
-        public async Task<int> AddAsync(Entities.Task task)
+        public async Task<int> AddAsync(Entities.TodoItem task)
         {
             await _context.Tasks.AddAsync(task);
             await _context.SaveChangesAsync();
@@ -34,7 +34,7 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
             return true;
 
         }
-        public async Task<IEnumerable<Entities.Task>> GetAllAsync(int userId)
+        public async Task<IEnumerable<Entities.TodoItem>> GetAllAsync(int userId)
         {
             return await _context.Tasks
                                  .Where(x => x.UserId == userId)
@@ -42,7 +42,7 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
         }
 
 
-        public async Task<Entities.Task?> GetById(int id, int userId)
+        public async Task<Entities.TodoItem?> GetById(int id, int userId)
         {
             var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true && x.UserId == userId);
             if (user == null)
@@ -52,7 +52,7 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
             return user;
         }
 
-        public async Task<bool> UpdateAsync(int id, Entities.Task task)
+        public async Task<bool> UpdateAsync(int id, Entities.TodoItem task)
         {
 
             var existingTask = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id);

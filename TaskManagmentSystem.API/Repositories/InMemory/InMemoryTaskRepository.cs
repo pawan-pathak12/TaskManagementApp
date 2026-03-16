@@ -7,15 +7,15 @@ namespace TaskManagmentSystem.API.Repositories.InMemory
     public class InMemoryTaskRepository : ITaskRepository
     {
         private readonly InMemoryDb _db;
-        private readonly List<Entities.Task> _tasks;
+        private readonly List<Entities.TodoItem> _tasks;
 
         public InMemoryTaskRepository(InMemoryDb db)
         {
             _db = db;
-            _tasks = _db.Tasks ?? new List<Entities.Task>();
+            _tasks = _db.Tasks ?? new List<Entities.TodoItem>();
         }
 
-        public Task<int> AddAsync(Entities.Task task)
+        public Task<int> AddAsync(Entities.TodoItem task)
         {
             // Simple auto-increment ID
             task.Id = _tasks.Count > 0
@@ -42,16 +42,16 @@ namespace TaskManagmentSystem.API.Repositories.InMemory
             return Task.FromResult(true);
         }
 
-        public Task<IEnumerable<Entities.Task>> GetAllAsync(int userId)
+        public Task<IEnumerable<Entities.TodoItem>> GetAllAsync(int userId)
         {
             var userTasks = _tasks
                 .Where(t => t.UserId == userId)
                 .ToList();
 
-            return Task.FromResult<IEnumerable<Entities.Task>>(userTasks.AsReadOnly());
+            return Task.FromResult<IEnumerable<Entities.TodoItem>>(userTasks.AsReadOnly());
         }
 
-        public Task<Entities.Task?> GetById(int id, int userId)
+        public Task<Entities.TodoItem?> GetById(int id, int userId)
         {
             var task = _tasks
                 .FirstOrDefault(t => t.Id == id && t.UserId == userId);
@@ -59,7 +59,7 @@ namespace TaskManagmentSystem.API.Repositories.InMemory
             return Task.FromResult(task);
         }
 
-        public Task<bool> UpdateAsync(int id, Entities.Task task)
+        public Task<bool> UpdateAsync(int id, Entities.TodoItem task)
         {
             var existing = _tasks.FirstOrDefault(t => t.Id == id);
             if (existing == null)

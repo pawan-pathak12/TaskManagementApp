@@ -2,7 +2,7 @@
 
 namespace TaskManagmentSystem.API.Entities
 {
-    public class Task
+    public class TodoItem
     {
         public int Id { get; set; }
 
