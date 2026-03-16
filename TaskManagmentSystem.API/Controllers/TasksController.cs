@@ -31,7 +31,7 @@ namespace TaskManagmentSystem.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            var task = _mapper.Map<Entities.Task>(taskDto);
+            var task = _mapper.Map<Entities.TodoItem>(taskDto);
 
             #region Business logic 
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
@@ -80,7 +80,7 @@ namespace TaskManagmentSystem.API.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var task = _mapper.Map<Entities.Task>(taskDto);
+            var task = _mapper.Map<Entities.TodoItem>(taskDto);
 
             var isUpdated = await _taskRepository.UpdateAsync(id, task);
             if (!isUpdated)

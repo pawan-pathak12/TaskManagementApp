@@ -1,6 +1,6 @@
 ﻿using TaskManagmentSystem.API.Interfaces.Repositories;
 using TaskManagmentSystem.API.Interfaces.Service;
-using Task = TaskManagmentSystem.API.Entities.Task;
+using TodoItem = TaskManagmentSystem.API.Entities.TodoItem;
 
 namespace TaskManagmentSystem.API.Services
 {
@@ -13,7 +13,7 @@ namespace TaskManagmentSystem.API.Services
             _taskRepository = taskRepository ?? throw new ArgumentNullException(nameof(taskRepository));
         }
 
-        public async Task<int> CreateAsync(Task task)
+        public async Task<int> CreateAsync(TodoItem task)
         {
             // Basic validation - task object cannot be null
             if (task == null)
@@ -47,7 +47,7 @@ namespace TaskManagmentSystem.API.Services
             return await _taskRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<Task>> GetAllAsync(int userId)
+        public async Task<IEnumerable<TodoItem>> GetAllAsync(int userId)
         {
             // UserId must be positive to avoid invalid queries
             if (userId <= 0)
@@ -56,7 +56,7 @@ namespace TaskManagmentSystem.API.Services
             return await _taskRepository.GetAllAsync(userId);
         }
 
-        public async Task<Task?> GetById(int id, int userId)
+        public async Task<TodoItem?> GetByIdAsync(int id, int userId)
         {
             // Task ID must be positive
             if (id <= 0)
@@ -69,7 +69,7 @@ namespace TaskManagmentSystem.API.Services
             return await _taskRepository.GetById(id, userId);
         }
 
-        public async Task<bool> UpdateAsync(int id, Task task)
+        public async Task<bool> UpdateAsync(int id, TodoItem task)
         {
             // ID must be positive - cannot update non-existent/invalid task
             if (id <= 0)

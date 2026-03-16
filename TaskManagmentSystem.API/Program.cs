@@ -6,9 +6,9 @@ using System.Text;
 using TaskManagmentSystem.API.Data;
 using TaskManagmentSystem.API.Interfaces.Repositories;
 using TaskManagmentSystem.API.Interfaces.Service;
+using TaskManagmentSystem.API.Repositories;
 using TaskManagmentSystem.API.Repositories.EFCore;
 using TaskManagmentSystem.API.Services;
-
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,7 +44,6 @@ builder.Services.AddSwaggerGen(c =>
 
 #region For Frontend
 
-// ADD THIS BLOCK FOR CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost", policy =>
@@ -63,14 +62,20 @@ builder.Services.AddCors(options =>
 #endregion
 
 
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseSqlServer(builder.Configuration.GetConnectionString("LocalServer")));
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 #region Services Registers 
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
 #endregion
 
 #region Jwt Setup
@@ -101,9 +106,9 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-using var serviceScope = app.Services.CreateScope();
-using var dbcontext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
-dbcontext?.Database.Migrate();
+//using var serviceScope = app.Services.CreateScope();
+//using var dbcontext = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+//dbcontext?.Database.Migrate();
 
 app.UseCors("AllowLocalhost");
 

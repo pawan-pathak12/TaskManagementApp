@@ -30,7 +30,7 @@ namespace TaskManagmentSystem.API.Controllers
             var result = await _authService.RegisterAsync(user);
             if (!result.IsSuccess)
             {
-                return BadRequest($"{result.Error}");
+                return BadRequest($"Error : {result.Error}");
             }
 
             return Ok("User Registered successfully");
@@ -52,7 +52,7 @@ namespace TaskManagmentSystem.API.Controllers
             if (!result.IsSuccess)
             {
 
-                return BadRequest(result.Error);
+                return BadRequest($" Error : {result.Error}");
             }
 
             return Ok(new { accesstoken = result.AccessToken });
