@@ -3,11 +3,11 @@ namespace TaskManagmentSystem.API.Interfaces.Service
 {
     public interface ITaskService
     {
-        Task<int> CreateAsync(TodoItem task);
+        Task<bool> CreateAsync(TodoItem task);
         Task<IEnumerable<TodoItem>> GetAllAsync(int userId);
-        Task<TodoItem?> GetByIdAsync(int id, int userId);
+        Task<TodoItem?> GetByIdAsync(int taskId, int userId);
         Task<bool> UpdateAsync(int id, TodoItem task);
-        Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(int taskId, int userId);
 
         #region User 
 

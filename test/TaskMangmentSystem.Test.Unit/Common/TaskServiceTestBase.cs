@@ -7,12 +7,15 @@ namespace TaskMangmentSystem.Test.Unit.Common
 {
     public class TaskServiceTestBase
     {
-        private ITaskService _taskService = null!;
-        private InMemoryTaskRepository _taskRepository = null!;
+        protected InMemoryUserRepo _userRepo = null!;
+        protected ITaskService _taskService = null!;
+        protected InMemoryTaskRepository _taskRepository = null!;
+
         [TestInitialize]
         public void TestInit()
         {
             var dbContext = new InMemoryDb();
+            _userRepo = new InMemoryUserRepo(dbContext);
             _taskRepository = new InMemoryTaskRepository(dbContext);
             _taskService = new TaskService(_taskRepository);
         }

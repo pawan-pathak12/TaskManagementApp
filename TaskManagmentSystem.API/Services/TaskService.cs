@@ -13,37 +13,49 @@ namespace TaskManagmentSystem.API.Services
             _taskRepository = taskRepository ?? throw new ArgumentNullException(nameof(taskRepository));
         }
 
-        public async Task<int> CreateAsync(TodoItem task)
+        public async Task<bool> CreateAsync(TodoItem task)
         {
             // Basic validation - task object cannot be null
             if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            {
+                return false;
+            }
 
             // UserId must be positive (0 or negative IDs are invalid)
             if (task.UserId <= 0)
-                throw new ArgumentException("UserId must be a positive number.", nameof(task.UserId));
+            {
+                return false;
+            }
 
             // Title is required - cannot be null, empty or only whitespace
             if (string.IsNullOrWhiteSpace(task.Title))
-                throw new ArgumentException("Task title is required.", nameof(task.Title));
+            {
+                return false;
+            }
 
             // Reasonable length limit - prevents abuse or database issues
             if (task.Title.Length > 200)
-                throw new ArgumentException("Task title cannot exceed 200 characters.", nameof(task.Title));
+            {
+                return false;
+            }
 
-            // Optional: Due date should not be in the past (business rule)
-            // if (task.DueDate.HasValue && task.DueDate.Value.Date < DateTime.UtcNow.Date)
-            //     throw new ArgumentException("Due date cannot be in the past.", nameof(task.DueDate));
+            await _taskRepository.AddAsync(task);
 
-            return await _taskRepository.AddAsync(task);
+            return true;
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(int id, int userId)
         {
-            // ID must be positive - 0 or negative doesn't make sense
             if (id <= 0)
-                throw new ArgumentException("Task ID must be positive.", nameof(id));
+            {
+                return false;
+            }
 
+            var task = await _taskRepository.GetById(id, userId);
+            if (task == null)
+            {
+                return false;
+            }
             return await _taskRepository.DeleteAsync(id);
         }
 
@@ -73,25 +85,27 @@ namespace TaskManagmentSystem.API.Services
         {
             // ID must be positive - cannot update non-existent/invalid task
             if (id <= 0)
-                throw new ArgumentException("Task ID must be positive.", nameof(id));
-
+            {
+                return false;
+            }
             // Task object cannot be null
             if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            {
+                return false;
+            }
 
             // Title is required - same rule as create
             if (string.IsNullOrWhiteSpace(task.Title))
-                throw new ArgumentException("Task title is required.", nameof(task.Title));
+            {
+                return false;
+            }
 
             // Same length limit as create - consistency
             if (task.Title.Length > 200)
-                throw new ArgumentException("Task title cannot exceed 200 characters.", nameof(task.Title));
+            {
+                return false;
+            }
 
-            // Optional: prevent changing ownership (security)
-            // You could fetch existing task and compare UserId
-            // var existing = await _taskRepository.GetById(id, task.UserId);
-            // if (existing == null || existing.UserId != task.UserId)
-            //     throw new UnauthorizedAccessException("Cannot change task ownership.");
 
             return await _taskRepository.UpdateAsync(id, task);
         }
@@ -100,7 +114,9 @@ namespace TaskManagmentSystem.API.Services
         {
             // UserId must be positive - invalid input otherwise
             if (id <= 0)
-                throw new ArgumentException("UserId must be positive.", nameof(id));
+            {
+                return false;
+            }
 
             return await _taskRepository.UserExists(id);
         }
