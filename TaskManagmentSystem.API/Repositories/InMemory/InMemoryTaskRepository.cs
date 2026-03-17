@@ -81,7 +81,7 @@ namespace TaskManagmentSystem.API.Repositories.InMemory
 
         public Task<bool> UserExists(int userId)
         {
-            var exists = _tasks.Any(t => t.UserId == userId);
+            var exists = _db.User.Any(t => t.Id == userId);
             return Task.FromResult(exists);
         }
     }
