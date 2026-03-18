@@ -42,7 +42,7 @@ namespace TaskManagmentSystem.API.Services
         {
             var storedUser = await _userRepository.GetByEmailAsync(user.Email);
 
-            if (user != null)
+            if (storedUser == null)
             {
                 return AuthResult.Failure(error: "Invalid credentials");
             }
