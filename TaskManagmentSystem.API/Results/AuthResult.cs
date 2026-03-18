@@ -32,7 +32,7 @@
             return new AuthResult
             {
                 IsSuccess = false,
-                Message = error,
+                Error = error,
             };
         }
     }
