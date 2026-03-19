@@ -11,3 +11,5 @@ obj
 .idea
 appsettings.Development.json
 taskmanagmentapi.runasp.net-WebDeploy.publishSettings
+
+appsettings.Test.json
