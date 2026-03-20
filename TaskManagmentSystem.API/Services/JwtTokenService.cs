@@ -7,7 +7,7 @@ using TaskManagmentSystem.API.Interfaces.Service;
 
 namespace TaskManagmentSystem.API.Services
 {
-    public class JwtTokenService : IJwtTokenService
+    public class JwtTokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
 

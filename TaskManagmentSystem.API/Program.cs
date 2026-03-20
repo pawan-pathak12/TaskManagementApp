@@ -69,7 +69,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("LocalServer")));
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 
 #region Services Registers 
-builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+builder.Services.AddScoped<ITokenService, JwtTokenService>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 

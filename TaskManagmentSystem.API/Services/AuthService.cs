@@ -9,10 +9,10 @@ namespace TaskManagmentSystem.API.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IJwtTokenService _tokenService;
+        private readonly ITokenService _tokenService;
 
         private readonly PasswordHasher<User> _passwordHasher;
-        public AuthService(IUserRepository userRepository, IJwtTokenService tokenService)
+        public AuthService(IUserRepository userRepository, ITokenService tokenService)
         {
             this._userRepository = userRepository;
             this._tokenService = tokenService;

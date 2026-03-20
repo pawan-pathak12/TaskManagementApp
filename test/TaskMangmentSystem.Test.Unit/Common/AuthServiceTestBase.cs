@@ -14,7 +14,7 @@ namespace TaskMangmentSystem.Test.Unit.Common
 
         protected IAuthService _authService = null!;
         protected InMemoryUserRepo _userRepo = null!;
-        protected Mock<IJwtTokenService> _tokenServiceMock = null!;
+        protected Mock<ITokenService> _tokenServiceMock = null!;
         protected Mock<IConfiguration> ConfigMock { get; private set; } = null!;
 
         protected PasswordHasher<User> _passwordHasher = null!;
@@ -41,7 +41,7 @@ namespace TaskMangmentSystem.Test.Unit.Common
             ConfigMock.Setup(c => c.GetSection("Jwt")).Returns(jwtSectionMock.Object);
 
             // Mock IJwtTokenService (instead of real one)
-            _tokenServiceMock = new Mock<IJwtTokenService>();
+            _tokenServiceMock = new Mock<ITokenService>();
 
             // Default setups - you can override in specific tests
             _tokenServiceMock.Setup(t => t.CreateToken(It.IsAny<User>()))
