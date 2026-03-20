@@ -2,7 +2,7 @@
 
 namespace TaskManagmentSystem.API.Interfaces.Service
 {
-    public interface IJwtTokenService
+    public interface ITokenService
     {
         string CreateToken(User user);
     }
