@@ -66,7 +66,7 @@ namespace TaskMangmentSystem.Test.Unit.Services
             var task = ReturnTask(userId);
             var taskId = await _taskRepository.AddAsync(task);
 
-            var taskData = await _taskRepository.GetById(taskId, userId);
+            var taskData = await _taskRepository.GetByIdAsync(taskId, userId);
             var update = new TodoItem
             {
                 UserId = taskData.UserId,
@@ -83,7 +83,7 @@ namespace TaskMangmentSystem.Test.Unit.Services
             //Assert
             Assert.IsTrue(result);
 
-            var updatedTask = await _taskRepository.GetById(taskId, userId);
+            var updatedTask = await _taskRepository.GetByIdAsync(taskId, userId);
             Assert.IsNotNull(updatedTask);
             Assert.AreEqual(update.Status, updatedTask.Status);
             Assert.AreEqual(update.Title, updatedTask.Title);
