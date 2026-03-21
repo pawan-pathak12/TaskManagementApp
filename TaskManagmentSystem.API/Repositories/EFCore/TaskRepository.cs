@@ -42,7 +42,7 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
         }
 
 
-        public async Task<Entities.TodoItem?> GetById(int id, int userId)
+        public async Task<Entities.TodoItem?> GetByIdAsync(int id, int userId)
         {
             var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true && x.UserId == userId);
             if (user == null)

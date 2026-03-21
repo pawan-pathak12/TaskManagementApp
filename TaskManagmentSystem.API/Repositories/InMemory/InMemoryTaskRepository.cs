@@ -51,7 +51,7 @@ namespace TaskManagmentSystem.API.Repositories.InMemory
             return Task.FromResult<IEnumerable<Entities.TodoItem>>(userTasks.AsReadOnly());
         }
 
-        public Task<Entities.TodoItem?> GetById(int id, int userId)
+        public Task<Entities.TodoItem?> GetByIdAsync(int id, int userId)
         {
             var task = _tasks
                 .FirstOrDefault(t => t.Id == id && t.UserId == userId);

@@ -1,4 +1,5 @@
-﻿using TaskManagmentSystem.API.Interfaces.Repositories;
+﻿using TaskManagmentSystem.API.Enums;
+using TaskManagmentSystem.API.Interfaces.Repositories;
 using TaskManagmentSystem.API.Interfaces.Service;
 using TodoItem = TaskManagmentSystem.API.Entities.TodoItem;
 
@@ -10,7 +11,7 @@ namespace TaskManagmentSystem.API.Services
 
         public TaskService(ITaskRepository taskRepository)
         {
-            _taskRepository = taskRepository ?? throw new ArgumentNullException(nameof(taskRepository));
+            _taskRepository = taskRepository;
         }
 
         public async Task<bool> CreateAsync(TodoItem task)
@@ -39,6 +40,9 @@ namespace TaskManagmentSystem.API.Services
                 return false;
             }
 
+            task.IsActive = true;
+            task.Status = TasksStatus.Pending;
+
             await _taskRepository.AddAsync(task);
 
             return true;
@@ -51,7 +55,7 @@ namespace TaskManagmentSystem.API.Services
                 return false;
             }
 
-            var task = await _taskRepository.GetById(id, userId);
+            var task = await _taskRepository.GetByIdAsync(id, userId);
             if (task == null)
             {
                 return false;
@@ -78,7 +82,7 @@ namespace TaskManagmentSystem.API.Services
             if (userId <= 0)
                 throw new ArgumentException("UserId must be positive.", nameof(userId));
 
-            return await _taskRepository.GetById(id, userId);
+            return await _taskRepository.GetByIdAsync(id, userId);
         }
 
         public async Task<bool> UpdateAsync(int id, TodoItem task)

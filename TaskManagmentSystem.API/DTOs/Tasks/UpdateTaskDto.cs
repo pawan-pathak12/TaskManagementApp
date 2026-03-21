@@ -4,6 +4,7 @@ namespace TaskManagmentSystem.API.DTOs.Tasks
 {
     public class UpdateTaskDto
     {
+        public int TaskId { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
         public TasksStatus Status { get; set; }
