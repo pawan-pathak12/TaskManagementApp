@@ -9,65 +9,59 @@ using TaskMangmentSystem.Test.API.DataBuilder;
 
 namespace TaskMangmentSystem.Test.API.Fixtures
 {
-    public class IntegrationTestBase
+    [TestClass]
+    public abstract class IntegrationTestBase
     {
         protected static CustomWebApplicationFactory Factory = null!;
         protected HttpClient _client = null!;
         protected TestDataBuilder testDataBuilder = null!;
-
         protected IServiceProvider Services = null!;
-        protected static Respawner _respawn = null!;
-        protected static string _conectionString = null!;
+        protected static Respawner _respawner = null!;
+        protected static string _connectionString = null!;
 
+        #region Class Initialize / Cleanup
 
-        #region Class Init and Cleanup
         [ClassInitialize(InheritanceBehavior.BeforeEachDerivedClass)]
         public static async Task ClassInit(TestContext context)
         {
             Factory = new CustomWebApplicationFactory();
 
-            //get connection string from the factory dbcontext 
-
+            // Get connection string once from real DbContext
             using var scope = Factory.Services.CreateScope();
             var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            _conectionString = dbContext.Database.GetConnectionString()!;
+            _connectionString = dbContext.Database.GetConnectionString()!;
 
-            // ensure db is created 
-
+            // Ensure database is created (only once per class init)
             await dbContext.Database.EnsureCreatedAsync();
 
-            // initilize Respawner
-
-            using var connection = new SqlConnection(_conectionString);
+            // Initialize Respawner (only once)
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
-
-            _respawn = await Respawner.CreateAsync(connection, new RespawnerOptions
+            _respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
             {
-                TablesToIgnore = new Respawn.Graph.Table[]
-                {
-                    "_EFMigrationsHistory"
-                },
+                TablesToIgnore = new Respawn.Graph.Table[] { new("_EFMigrationsHistory") },
                 DbAdapter = DbAdapter.SqlServer
             });
         }
 
         [ClassCleanup(InheritanceBehavior.BeforeEachDerivedClass)]
-
         public static void ClassCleanUp()
         {
-            Factory.Dispose();
+            Factory?.Dispose();
         }
+
         #endregion
 
-        #region Class Init and CleanUp
+        #region Test Initialize / Cleanup
 
         [TestInitialize]
-        public async Task TestInt()
+        public async Task TestInit()
         {
-            //Reset db are every test 
-            using var connection = new SqlConnection(_conectionString);
+            // Reset database state before every test (using Respawn)
+            await using var connection = new SqlConnection(_connectionString);
             await connection.OpenAsync();
-            await _respawn.ResetAsync(connection);
+            await _respawner.ResetAsync(connection);
+
 
             _client = Factory.CreateClient(new WebApplicationFactoryClientOptions
             {
@@ -75,41 +69,53 @@ namespace TaskMangmentSystem.Test.API.Fixtures
                 AllowAutoRedirect = false
             });
 
+            // Create scoped services
             var scope = Factory.Services.CreateScope();
             Services = scope.ServiceProvider;
+
             testDataBuilder = new TestDataBuilder(Services);
 
+            // Create default authenticated user for most tests
             var user = await testDataBuilder.CreateAndReturnUser();
-            var token = testDataBuilder.GenerateAndReturnToken(user!);
+            if (user == null)
+                throw new InvalidOperationException("Failed to create test user");
 
-            _client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", token);
+            var token = testDataBuilder.GenerateAndReturnToken(user);
+            _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         }
 
         [TestCleanup]
         public void TestCleanUp()
         {
-            _client.Dispose();
+            _client?.Dispose();
         }
 
-        public void SetRefreshTokenCookie(HttpResponseMessage loginResponse)
+        #endregion
+
+        #region Helpers
+
+        protected void SetRefreshTokenCookie(HttpResponseMessage loginResponse)
         {
-            var cookies = loginResponse.Headers.GetValues("Set-Cookie")
-                .Where(c => c.Contains("refreshToken="))
-                .Select(c => c.Split(';')[0])
-                .ToList();
-
-            foreach (var cookie in cookies)
+            if (loginResponse.Headers.TryGetValues("Set-Cookie", out var cookieValues))
             {
-                // rmeove existing cookie 
-                if (_client.DefaultRequestHeaders.Contains("Cookie"))
-                {
-                    _client.DefaultRequestHeaders.Remove("Cookie");
-                }
-                _client.DefaultRequestHeaders.Add("Cookie", cookie);
-            }
+                var refreshCookies = cookieValues
+                    .Where(c => c.Contains("refreshToken="))
+                    .Select(c => c.Split(';')[0])
+                    .ToList();
 
+                foreach (var cookie in refreshCookies)
+                {
+                    // Remove any existing Cookie header first to avoid duplicates
+                    if (_client.DefaultRequestHeaders.Contains("Cookie"))
+                    {
+                        _client.DefaultRequestHeaders.Remove("Cookie");
+                    }
+
+                    _client.DefaultRequestHeaders.Add("Cookie", cookie);
+                }
+            }
         }
+
         #endregion
     }
 }

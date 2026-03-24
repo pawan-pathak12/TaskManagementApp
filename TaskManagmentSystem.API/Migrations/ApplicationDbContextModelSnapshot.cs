@@ -55,7 +55,7 @@ namespace TaskManagmentSystem.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("TodoItems");
                 });
 
             modelBuilder.Entity("TaskManagmentSystem.API.Entities.User", b =>

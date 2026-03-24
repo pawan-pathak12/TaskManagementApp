@@ -41,7 +41,8 @@ namespace TaskManagmentSystem.API.Controllers
             #endregion
             var result = await _taskService.CreateAsync(task);
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = task.Id }, task);
+            return Ok("Task Created");
+            //    return CreatedAtAction(nameof(GetByIdAsync), new { id = task.Id }, task);
         }
 
         #endregion
@@ -98,10 +99,6 @@ namespace TaskManagmentSystem.API.Controllers
         public async Task<IActionResult> DeleteAsync([FromRoute] int id)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
-
-            var existingTask = await _taskService.GetByIdAsync(id, userId);
-            if (existingTask == null)
-                return NotFound();
 
             var isDeleted = await _taskService.DeleteAsync(id, userId);
             if (!isDeleted)
