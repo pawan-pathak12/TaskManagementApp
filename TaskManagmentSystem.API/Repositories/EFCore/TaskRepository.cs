@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManagmentSystem.API.Data;
+using TaskManagmentSystem.API.Entities;
 using TaskManagmentSystem.API.Interfaces.Repositories;
 
 namespace TaskManagmentSystem.API.Repositories.EFCore
@@ -15,16 +16,16 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
 
         #region CURD Operatons 
 
-        public async Task<int> AddAsync(Entities.TodoItem task)
+        public async Task<int> AddAsync(TodoItem task)
         {
-            await _context.Tasks.AddAsync(task);
+            await _context.TodoItems.AddAsync(task);
             await _context.SaveChangesAsync();
             return task.Id;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true);
+            var user = await _context.TodoItems.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true);
             if (user == null)
             {
                 return false;
@@ -36,7 +37,7 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
         }
         public async Task<IEnumerable<Entities.TodoItem>> GetAllAsync(int userId)
         {
-            return await _context.Tasks
+            return await _context.TodoItems
                                  .Where(x => x.UserId == userId)
                                  .ToListAsync();
         }
@@ -44,18 +45,17 @@ namespace TaskManagmentSystem.API.Repositories.EFCore
 
         public async Task<Entities.TodoItem?> GetByIdAsync(int id, int userId)
         {
-            var user = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id && x.IsActive == true && x.UserId == userId);
-            if (user == null)
-            {
-                return null;
-            }
+            var user = await _context.TodoItems.FirstOrDefaultAsync
+                (x => x.Id == id && x.IsActive
+                 && x.UserId == userId);
+
             return user;
         }
 
         public async Task<bool> UpdateAsync(int id, Entities.TodoItem task)
         {
 
-            var existingTask = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
+            var existingTask = await _context.TodoItems.FirstOrDefaultAsync(x => x.Id == id);
             if (existingTask == null)
             {
                 return false;

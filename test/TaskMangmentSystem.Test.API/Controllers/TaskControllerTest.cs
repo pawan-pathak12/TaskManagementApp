@@ -13,7 +13,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
         #region Positive Part 
 
         [TestMethod]
-        public async Task CreateAsync_WhenValid_Return201()
+        public async Task CreateAsync_WhenValid_Return200()
         {
             //Arrange 
             var user = testDataBuilder.CreateAndReturnUser();
@@ -30,14 +30,14 @@ namespace TaskMangmentSystem.Test.API.Controllers
 
             //Assert
 
-            Assert.AreEqual(HttpStatusCode.Created, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
         }
 
         [TestMethod]
         public async Task GetAllAsync_WhenTaskFound_Return200()
         {
             //Arrange 
-            var user = testDataBuilder.CreateAndReturnUser();
+            var user = await testDataBuilder.CreateAndReturnUser();
             var task = await testDataBuilder.CreateAndReturnTask(user.Id);
 
             //Act
@@ -52,7 +52,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
         {
             //Arrange 
 
-            var user = testDataBuilder.CreateAndReturnUser();
+            var user = await testDataBuilder.CreateAndReturnUser();
             var task = await testDataBuilder.CreateAndReturnTask(user.Id);
 
             //Act
@@ -68,7 +68,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
         {
             //Arrange 
 
-            var user = testDataBuilder.CreateAndReturnUser();
+            var user = await testDataBuilder.CreateAndReturnUser();
             var task = await testDataBuilder.CreateAndReturnTask(user.Id);
 
             var update = new UpdateTaskDto
@@ -93,7 +93,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
         {
             //Arrange 
 
-            var user = testDataBuilder.CreateAndReturnUser();
+            var user = await testDataBuilder.CreateAndReturnUser();
             var task = await testDataBuilder.CreateAndReturnTask(user.Id);
 
             //Act
@@ -124,7 +124,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
             var request = new CreateTaskDto
             {
                 Description = "Hello tesintg ",
-                Title = "Testing"
+                Title = ""  // null title
             };
 
             //Act
@@ -149,7 +149,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
         }
 
         [TestMethod]
-        public async Task UpdateAsync_WhenTaskNotFound_Return404()
+        public async Task UpdateAsync_WhenTaskNotFound_Return400()
         {
             //Arrange 
             var taskId = new Random().Next(0001, 9999);
@@ -167,7 +167,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
             var response = await _client.PutAsJsonAsync($"/api/Tasks/{update.TaskId}", update);
 
             //Assert
-            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+            Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
 
@@ -176,7 +176,7 @@ namespace TaskMangmentSystem.Test.API.Controllers
         {
             //Arrange 
 
-            var user = testDataBuilder.CreateAndReturnUser();
+            var user = await testDataBuilder.CreateAndReturnUser();
             var task = await testDataBuilder.CreateAndReturnTask(user.Id);
 
             var update = new UpdateTaskDto

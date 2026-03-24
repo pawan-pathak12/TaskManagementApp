@@ -65,7 +65,7 @@ namespace TaskManagmentSystem.API.Services
 
         public async Task<IEnumerable<TodoItem>> GetAllAsync(int userId)
         {
-            // UserId must be positive to avoid invalid queries
+
             if (userId <= 0)
                 throw new ArgumentException("UserId must be positive.", nameof(userId));
 
@@ -74,11 +74,10 @@ namespace TaskManagmentSystem.API.Services
 
         public async Task<TodoItem?> GetByIdAsync(int id, int userId)
         {
-            // Task ID must be positive
+
             if (id <= 0)
                 throw new ArgumentException("Task ID must be positive.", nameof(id));
 
-            // UserId must be positive - ownership check depends on it
             if (userId <= 0)
                 throw new ArgumentException("UserId must be positive.", nameof(userId));
 

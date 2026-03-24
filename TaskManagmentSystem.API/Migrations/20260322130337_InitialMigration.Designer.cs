@@ -12,8 +12,8 @@ using TaskManagmentSystem.API.Data;
 namespace TaskManagmentSystem.API.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260108145757_addedsomecolumn")]
-    partial class addedsomecolumn
+    [Migration("20260322130337_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace TaskManagmentSystem.API.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TaskManagmentSystem.API.Entities.Task", b =>
+            modelBuilder.Entity("TaskManagmentSystem.API.Entities.TodoItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -58,7 +58,7 @@ namespace TaskManagmentSystem.API.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("TodoItems");
                 });
 
             modelBuilder.Entity("TaskManagmentSystem.API.Entities.User", b =>
@@ -87,7 +87,7 @@ namespace TaskManagmentSystem.API.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("TaskManagmentSystem.API.Entities.Task", b =>
+            modelBuilder.Entity("TaskManagmentSystem.API.Entities.TodoItem", b =>
                 {
                     b.HasOne("TaskManagmentSystem.API.Entities.User", "User")
                         .WithMany()
