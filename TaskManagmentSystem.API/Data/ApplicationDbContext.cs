@@ -13,5 +13,6 @@ namespace TaskManagmentSystem.API.Data
         }
         public DbSet<User> Users => Set<User>();
         public DbSet<TodoItem> TodoItems => Set<TodoItem>();
+        public DbSet<OtpVerification> OtpVerifications => Set<OtpVerification>();
     }
 }
