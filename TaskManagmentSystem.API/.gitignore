@@ -11,3 +11,10 @@ obj
 .idea
 appsettings.Development.json
 Properties/PublishProfiles
+Web Deploy.pubxml
+Web Deploy.PublishProfiles
+Properties/Web Deploy.pubxml
+Properties/PublishProfiles
+Properties/pubxml
+
+Properties/site50043-WebDeploy.pubxml
