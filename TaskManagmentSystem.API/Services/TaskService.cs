@@ -66,9 +66,6 @@ namespace TaskManagmentSystem.API.Services
         public async Task<IEnumerable<TodoItem>> GetAllAsync(int userId)
         {
 
-            if (userId <= 0)
-                throw new ArgumentException("UserId must be positive.", nameof(userId));
-
             return await _taskRepository.GetAllAsync(userId);
         }
 

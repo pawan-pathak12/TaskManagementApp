@@ -42,17 +42,24 @@ namespace TaskManagmentSystem.API.Controllers
             var result = await _taskService.CreateAsync(task);
 
             return Ok("Task Created");
-            //    return CreatedAtAction(nameof(GetByIdAsync), new { id = task.Id }, task);
+            //return CreatedAtAction(nameof(GetByIdAsync), new { id = task.Id }, task);
         }
 
         #endregion
 
         #region GET -Endpoint 
-        [Authorize(Roles = "User , Admin")]
         [HttpGet]
+        [Authorize]  // Make sure this is here!
         public async Task<IActionResult> GetAllAsync()
         {
-            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            // Now this will work correctly
+            string? userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userIdStr) || !int.TryParse(userIdStr, out int userId))
+            {
+                return Unauthorized("Invalid or missing user ID in token.");
+            }
+
             var tasks = await _taskService.GetAllAsync(userId);
             var responseTask = _mapper.Map<IEnumerable<ResponseTaskDto>>(tasks);
 
